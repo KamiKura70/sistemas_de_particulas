@@ -1,23 +1,36 @@
-let pelotas = [];
+let sp = [];
 
 function setup() {
+  angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
-  rectMode(CENTER);
 }
 
 function draw() {
-  background(0);
+  background(0, 20);
 
-  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
-    pelotas.push(new Pelota(mouseX, mouseY));
+  noFill();
+  stroke(255, 255, 255, 160);
+  strokeWeight(2);
+
+  beginShape();
+  for (let i = 0; i < sp.length; i++) {
+    curveVertex(sp[i].pos.x, sp[i].pos.y);
+  }
+  endShape();
+
+  for (const [index, particula] of sp.entries()) {
+    particula.update();
+    particula.display();
+    if (particula.estaMuerta) {
+      sp.splice(index, 1);
+    }
   }
 
-for (let i = pelotas.length - 1; i >= 0; i--) {
-  pelotas[i].actualizar();
-  pelotas[i].vizualizar();
-
-  if (pelotas[i].alpha <= 0) {
-    pelotas.splice(i, 1);
-  }
+  let np = new Particula(mouseX, mouseY);
+  sp.push(np);
 }
+
+function mouseClicked() {
+  let np = new Particula(mouseX, mouseY);
+  sp.push(np);
 }
